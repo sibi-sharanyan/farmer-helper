@@ -1,0 +1,17 @@
+<% include partials/header %>
+
+<div class="container">
+
+  <h1>Check</h1>
+
+<% res.forEach(function(post) { %>
+  <h1> <%= post.content %>  </h1>
+  <img src="img/<%= post.img %>" class="thumbnail" style="width:10%" >
+<% }) %>
+
+
+</div>
+
+
+
+<% include partials/footer %>

@@ -1,0 +1,20 @@
+<% include partials/header %>
+
+<div class="container"> 
+        <% if(userexist){ %>
+            <h2>  The username you entered is already registered . Try logging in </h2>
+            <% } %>
+        <h3> <STRong> Login with your credentials! </STRong> </h3>
+        <hr>
+        <form action = "/login" method = "post" class="form-group">
+            <strong>Username : </strong>   <input class="form-control type = "text" name = "username" palceholder = "username" >
+            <br> 
+            <strong>Password : </strong>   <input class="form-control" type = "password" name = "password" palceholder = "password" >
+            <br> 
+            <input  type = "submit" class="btn btn-primary" >
+        </form>
+        <h4> New user ?  <a href = "/register"> sign up ! </a> </h4>
+</div>
+
+
+<% include partials/footer %>

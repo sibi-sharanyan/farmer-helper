@@ -1,0 +1,23 @@
+<% include partials/header %>
+
+
+
+<h1> Welcome to farmer Helper! Send us any agriculture related query and we'll reply with the solution you're looking for! </h1>
+
+<% if(user1) {  %>
+  <h1> You are logged in as
+     <strong> <%= user1.username %> </strong>    </h1>
+     <h1> <a href="/logout">  logout </a>  </h1>  
+
+   <h1>Post the Question you have in mind!  <a href="/query"> Click here </a> </h1>  
+
+<% } else { %>
+
+  <h1>New here ? sign up to start using ! <a href="/register">register</a> </h1>
+  
+  <h1>Already a user ? Login now! <a href="/login">login </a></h1>
+  <% } %>
+
+
+
+<% include partials/footer %>

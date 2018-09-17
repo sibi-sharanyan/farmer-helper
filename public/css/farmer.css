@@ -1,0 +1,29 @@
+.progress {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  height: 4rem;
+}
+
+#sorry {
+  margin-top: 2rem;
+}
+
+#found {
+  margin-top: 2rem;
+}
+
+#user {
+  color: whitesmoke;
+} 
+
+.headd {
+  margin-top: 1rem;
+}
+
+.reg {
+ padding-left: 65rem;
+}
+
+.check {
+  padding-left: 10rem;
+}

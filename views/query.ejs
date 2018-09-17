@@ -1,0 +1,15 @@
+<% include partials/header %>
+
+<div class="container">
+  <h2>Enter Your Agriculture related doubt along with a picture!</h2>
+  <form method="POST"  enctype="multipart/form-data" action="/query">
+    <textarea class="form-control" rows="5" name="sub" ></textarea> <br> <br>
+      <p>Attach a picture of your crop</p>  <input type="file" name="recfile" > <br> <br>
+    <button type="submit" class="btn btn-primary ">Submit</button> 
+  </form>
+</div>
+
+
+
+
+<% include partials/footer %>
