@@ -12,12 +12,12 @@ var express = require("express"),
   nodemailer = require('nodemailer'),
   post = require("./models/post"),
   user = require("./models/user");
-
+  var pass = 'fillme';
   var transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
       user: 'helperfarmer0@gmail.com',
-      pass: '123...qwe'
+      pass: process.env.mailpass || pass
     }
   });
 
