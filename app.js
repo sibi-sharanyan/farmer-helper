@@ -8,9 +8,18 @@ var express = require("express"),
   multer = require('multer'),
   fs = require('fs'),
   upload = multer({ dest: 'upload/' }),
-  type = upload.single('recfile');
+  type = upload.single('recfile'),
+  nodemailer = require('nodemailer'),
   post = require("./models/post"),
   user = require("./models/user");
+
+  var transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'helperfarmer0@gmail.com',
+      pass: '123...qwe'
+    }
+  });
 
   mongoose.connect(
     process.env.DATABASEURL || "mongodb://localhost:27017/farmer",
@@ -46,6 +55,22 @@ function isLoggedIn(req, res, next) {
   res.redirect("/login");
 }
 
+function isAdmin(req, res, next) {
+  if (req.isAuthenticated()) {
+    if(req.user.username == 'admin')
+    {
+      return next();
+    }
+    else
+    {
+      res.redirect("/home");
+    }
+  }
+  else
+  {
+  res.redirect("/login");
+  }
+}
 
 // The root that redirects to home
 app.get("/", function(req, res) {
@@ -54,6 +79,7 @@ app.get("/", function(req, res) {
 
 //The homepage for the user
 app.get("/home", function(req, res) {  
+  // console.log(req.user.username);
   res.render("home" , {user1 : req.user});  
 });
 
@@ -75,7 +101,7 @@ app.post("/query" , type  , function(req, res) {
   src.pipe(dest);
   src.on('end', function() {
     
-    post.create({content: req.body.sub , img: req.file.originalname  } , function(err , msg)
+    post.create({content: req.body.sub , img: req.file.originalname , author: req.user.id } , function(err , msg)
     {
       if(err)
       {
@@ -96,10 +122,10 @@ app.post("/query" , type  , function(req, res) {
 )
 
 //Admin panel to view all the posted queries
-app.get("/admin" , function(req , res)
+app.get("/admin" , isAdmin , function(req , res)
 {
 
-  post.find({} , function(err , posts)
+  post.find({responded: false} , function(err , posts)
   {
     if(err)
     {
@@ -113,6 +139,80 @@ app.get("/admin" , function(req , res)
   
 })
 
+//Display form to Respond to the query (admin)
+app.get("/response/:id" , function(req , res) {    
+var postid = req.params.id;
+console.log(req.params.id);
+post.findById(postid).populate('author').exec(function (err , post1)
+{
+  if(err)
+  {
+    console.log(err);
+  }
+  else
+  {
+
+    res.render("response" , {post: post1});
+
+  }
+}
+)
+})
+
+//Post the response to the database and mail the user
+app.post("/response/:id" , function(req , res) {    
+  var postid = req.params.id;
+  post.findById(postid).populate('author').exec(function (err , post1)
+  {
+    if(err)
+    {
+      console.log(err);
+    }
+    else
+    {
+      post1.responded = true;
+      post1.solution = req.body.sub;
+      post1.save();
+      var mailOptions = {
+        from: 'helperfarmer0@gmail.com',
+        to: post1.author.email ,
+        subject: 'Replying to your query on farmer helper',
+        text: 'hi ' + post1.author.username + ', The solution to the question you posted on our Farmer helper application is as follows : \n' + req.body.sub 
+      };
+      transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+          console.log(error);
+        } else {
+          console.log('Email sent: ' + info.response);
+          res.redirect("/admin");
+        }
+      });
+      
+  
+    }
+  }
+  )
+  })
+
+//Display all the answered questions
+app.get("/answers" , function(req , res) {
+
+  post.find({responded: true}).populate('author').exec(function(err , post1)
+  {
+    if(err)
+    {
+      console.log(err);
+    }
+    else
+    {
+      res.render("answers" , {post: post1});
+    }
+  })
+
+})
+
+
+
 //Display form to register user
 app.get("/register", function(req, res) {
   res.render("register", { user: req.user });
@@ -124,7 +224,7 @@ app.post("/register", function(req, res) {
   req.body.password;
 
   user.register(
-    new user({ username: req.body.username }),
+    new user({ username: req.body.username , email: req.body.mail }),
     req.body.password,
     function(err, user) {
       if (err) {

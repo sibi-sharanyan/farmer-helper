@@ -1,0 +1,19 @@
+<% include partials/header %>
+
+
+<div class="container">
+  <% post.forEach(function(post1) { %>
+    <hr>
+    <h3><strong>Problem - posted by <%= post1.author.username %></strong></h3> <hr>
+    <h1><%= post1.content %></h1>
+    <img src="/img/<%= post1.img %>" class="thumbnail" style="width:30em" >  <hr>
+    <h3><strong> Solution </strong></h3> <hr>
+    <h1> <%= post1.solution %>  </h1>
+<% }) %>
+</div>
+
+
+
+
+
+<% include partials/footer %>

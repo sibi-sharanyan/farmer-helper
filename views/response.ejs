@@ -1,0 +1,17 @@
+<% include partials/header %>
+
+
+<div class="container">
+  <h1>  <%= post.content %> </h1>
+  <img src="/img/<%= post.img %>" class="thumbnail" style="width:30em" >  
+  <h1>Enter your response to the post below!</h1>
+  <form method="POST" action="/response/<%= post.id %>">
+    <textarea class="form-control" rows="5" name="sub" ></textarea> <br> <br>
+    <button type="submit" class="btn btn-primary ">Submit</button> 
+  </form>  
+</div>
+
+
+
+
+<% include partials/footer %>

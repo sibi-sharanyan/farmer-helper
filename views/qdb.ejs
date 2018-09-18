@@ -6,7 +6,9 @@
 
 <% res.forEach(function(post) { %>
   <h1> <%= post.content %>  </h1>
-  <img src="img/<%= post.img %>" class="thumbnail" style="width:10%" >
+  <img src="img/<%= post.img %>" class="thumbnail" style="width:30em" >
+  <h3> <a href="/response/<%= post.id %>"> Respond </a> </h3>  
+
 <% }) %>
 
 
